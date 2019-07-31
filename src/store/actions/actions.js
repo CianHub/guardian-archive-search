@@ -32,3 +32,9 @@ export const getArticlesFail = error => {
     error
   };
 };
+
+export const clearArticles = () => {
+  return {
+    type: actions.CLEAR_ARTICLES
+  };
+};

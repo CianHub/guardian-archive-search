@@ -50,7 +50,6 @@ export const Article = props => {
             href={props.webUrl}
             target="_blank"
             size="small"
-            color="#0d7cad"
           >
             View Article
           </Button>
