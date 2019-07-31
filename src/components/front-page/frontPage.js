@@ -3,38 +3,69 @@ import { connect } from "react-redux";
 import { getArticles, getArticlesSearch } from "../../store/actions/actions";
 import Button from "@material-ui/core/Button";
 import Input from "@material-ui/core/Input";
+import Header from "../header/header";
+import { Container } from "@material-ui/core";
+import { Divider } from "@material-ui/core";
+import styles from "./frontPage.module.css";
+import { Article } from "../article/article";
+import Grid from "@material-ui/core/Grid";
 
 const FrontPage = props => {
-  const [query, setQuery] = useState("a");
-
-  useEffect(() => {
-    props.getArticles();
-  }, []);
-
-  const searchArticle = () => {
+  const [query, setQuery] = useState("");
+ 
+  const searchArticle = event => {
+    setQuery(event.target.value);
     props.getSearchArticles(query + "&");
   };
 
+  const getLatestNews = () => {
+    setQuery('');
+   props.getArticles()
+  }
+
   const articles = props.articles
     ? props.articles.map(article => {
-        return <p key={article.id}>{article.webTitle}</p>;
+        return (
+          <Grid item xs={3}>
+            <Article
+              className={styles.Article}
+              type={article.type}
+              webTitle={article.webTitle}
+              key={article.id}
+              webUrl={article.webUrl}
+              img={article.fields.thumbnail}
+              headline={article.fields.headline}
+              body={article.fields.trailText}
+            />
+          </Grid>
+        );
       })
     : null;
 
   return (
-    <div>
-      <Input
-        defaultValue={query}
-        inputProps={{
-          "aria-label": "description"
-        }}
-        onChange={event => setQuery(event.target.value)}
-      />
-      <Button variant="contained" color="primary" onClick={searchArticle}>
-        Get Articles
-      </Button>
-      {articles}
-    </div>
+    <Container style={{"bakgroundColor": "#eae8e3"}}maxWidth="xl">
+      <br />
+      <Container className={styles.Header} maxWidth="xl">
+        <Header />
+      </Container>
+      <Divider variant="middle" />
+      <Container maxWidth="lg">
+        <Input
+          fullWidth
+          className={styles.searchInput}
+          defaultValue={query}
+          inputProps={{
+            "aria-label": "description"
+          }}
+          onChange={event => searchArticle(event)}
+          placeholder="Enter your search query..."
+        />
+      </Container>
+      <Button onClick={getLatestNews}> Get the Latest News</Button>
+      <Grid container spacing={3}>
+        {articles}
+      </Grid>
+    </Container>
   );
 };
 

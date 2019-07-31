@@ -13,7 +13,7 @@ export function* getArticlesSaga(action) {
 
   try {
     const articles = yield axios.get(
-      "https://content.guardianapis.com/search?api-key=0b4369b4-cc69-403a-9d7a-b6ade3c54167"
+      "https://content.guardianapis.com/search?show-fields=starRating,headline,trailText,thumbnail,short-url&page-size=50&api-key=0b4369b4-cc69-403a-9d7a-b6ade3c54167"
     );
     yield put(getArticlesSuccess(articles.data.response.results));
   } catch (err) {
@@ -23,12 +23,19 @@ export function* getArticlesSaga(action) {
 
 export function* getArticlesSearchSaga(action) {
   yield put(getArticlesStart());
-
+  const page = action.page ? action.page : 1;
+  const pageSize = action.pageSize ? action.pageSize : 50;
   try {
     const articles = yield axios.get(
       "https://content.guardianapis.com/search?q=" +
         action.query +
-        "api-key=0b4369b4-cc69-403a-9d7a-b6ade3c54167"
+        "page=" +
+        page +
+        "&" +
+        "page-size=" +
+        pageSize +
+        "&" +
+        "show-fields=starRating,headline,trailText,thumbnail,short-url&api-key=0b4369b4-cc69-403a-9d7a-b6ade3c54167"
     );
     yield put(getArticlesSuccess(articles.data.response.results));
   } catch (err) {
