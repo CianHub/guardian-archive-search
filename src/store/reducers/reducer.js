@@ -6,7 +6,7 @@ const initialState = {
 
 export const getArticlesReducer = (state = initialState, action) => {
   switch (action.type) {
-    case actions.GET_ARTICLES:
+    case actions.GET_ARTICLES_SUCCESS:
       return { ...state, articles: action.articles };
 
     default:
