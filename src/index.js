@@ -3,10 +3,14 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
+
 import { getArticlesReducer } from "./store/reducers/reducer";
+import { watchArticles } from "./store/sagas/sagas";
 
 import { BrowserRouter } from "react-router-dom";
 import { createStore, compose } from "redux";
+import createSagaMiddleware from "redux-saga";
+
 import { Provider } from "react-redux";
 import "typeface-roboto";
 
@@ -15,7 +19,9 @@ const composeEnhancers =
     ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
     : null || compose;
 
-const store = createStore(getArticlesReducer, composeEnhancers());
+const sagaMiddleware = createSagaMiddleware();
+
+const store = createStore(getArticlesReducer, composeEnhancers(sagaMiddleware));
 
 const app = (
   <Provider store={store}>
@@ -24,6 +30,8 @@ const app = (
     </BrowserRouter>
   </Provider>
 );
+
+sagaMiddleware.run(watchArticles);
 
 ReactDOM.render(app, document.getElementById("root"));
 
