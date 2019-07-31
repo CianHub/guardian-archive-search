@@ -7,7 +7,7 @@ const initialState = {
 export const getArticlesReducer = (state = initialState, action) => {
   switch (action.type) {
     case actions.GET_ARTICLES:
-      return { ...state, articles: actions.articles };
+      return { ...state, articles: action.articles };
 
     default:
       return state;

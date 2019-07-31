@@ -8,7 +8,7 @@ import { getArticlesReducer } from "./store/reducers/reducer";
 import { watchArticles } from "./store/sagas/sagas";
 
 import { BrowserRouter } from "react-router-dom";
-import { createStore, compose } from "redux";
+import { createStore, compose, applyMiddleware } from "redux";
 import createSagaMiddleware from "redux-saga";
 
 import { Provider } from "react-redux";
@@ -21,7 +21,10 @@ const composeEnhancers =
 
 const sagaMiddleware = createSagaMiddleware();
 
-const store = createStore(getArticlesReducer, composeEnhancers(sagaMiddleware));
+const store = createStore(
+  getArticlesReducer,
+  composeEnhancers(applyMiddleware(sagaMiddleware))
+);
 
 const app = (
   <Provider store={store}>
