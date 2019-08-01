@@ -18,7 +18,7 @@ export function* getArticlesSaga(action) {
 
   try {
     const articles = yield axios.get(
-      "https://content.guardianapis.com/search?show-fields=starRating,headline,trailText,thumbnail,short-url&page-size=50&api-key=" +
+      "https://content.guardianapis.com/search?show-fields=starRating,sectionName,headline,webPublicationDate,trailText,thumbnail,short-url&page-size=50&show-tags=contributor&api-key=" +
         process.env.REACT_APP_API_KEY
     );
     yield put(
@@ -47,7 +47,7 @@ export function* getArticlesSearchSaga(action) {
         "page-size=" +
         pageSize +
         "&" +
-        "show-fields=starRating,headline,trailText,thumbnail,short-url&api-key= " +
+        "show-fields=starRating,headline,trailText,thumbnail,sectionName,webPublicationDate,short-url&show-tags=contributor&api-key=" +
         process.env.REACT_APP_API_KEY
     );
     yield put(
@@ -75,7 +75,6 @@ export function* clearArticlesSaga(action) {
 
 export function* getArticlesNextPageSaga(action) {
   yield put(getArticlesNextPageStart());
-  console.log(action);
   const query = action.query ? action.query : null;
   const currentPage =
     action.pages > action.currentPage
@@ -89,7 +88,7 @@ export function* getArticlesNextPageSaga(action) {
           "&page=" +
           currentPage +
           "&page-size=50&" +
-          "show-fields=starRating,headline,trailText,thumbnail,short-url&api-key=" +
+          "show-fields=starRating,headline,trailText,thumbnail,webPublicationDate,sectionName,short-url&show-tags=contributor&api-key=" +
           process.env.REACT_APP_API_KEY
       );
 

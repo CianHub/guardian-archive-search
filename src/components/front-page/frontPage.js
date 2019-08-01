@@ -15,6 +15,7 @@ import styles from "./frontPage.module.css";
 import { Article } from "../article/article";
 import Grid from "@material-ui/core/Grid";
 import { SyncLoader } from "react-spinners";
+import Form from "../form/form";
 
 const FrontPage = props => {
   const [query, setQuery] = useState("");
@@ -31,7 +32,7 @@ const FrontPage = props => {
     const wrappedElement = document.getElementById("grid");
     if (isBottom(wrappedElement)) {
       console.log("header bottom reached");
-      if (props.articles.length > 0) {
+      if (props.articles && props.articles.length > 0) {
         props.getNextPage(props.numberOfPages, props.currentPage, query);
       }
       document.removeEventListener("scroll", trackScrolling);
@@ -59,6 +60,12 @@ const FrontPage = props => {
 
   const articles = props.articles
     ? props.articles.map(article => {
+        let author = null;
+        let authorURL = null;
+        if (article.tags[0]) {
+          author = article.tags[0].webTitle;
+          authorURL = article.tags[0].webUrl;
+        }
         return (
           <Grid key={article.id + 1} item xs={3}>
             <Article
@@ -69,6 +76,10 @@ const FrontPage = props => {
               img={article.fields.thumbnail}
               headline={article.fields.headline}
               body={article.fields.trailText}
+              author={author}
+              authorURL={authorURL}
+              date={new Date(article.webPublicationDate).toLocaleString()}
+              section={article.sectionName}
             />
           </Grid>
         );
@@ -93,18 +104,12 @@ const FrontPage = props => {
         <Header />
       </Container>
       <Divider variant="middle" />
-      <Container maxWidth="lg">
-        <Input
-          fullWidth
-          className={styles.searchInput}
-          value={query}
-          inputProps={{
-            "aria-label": "description"
-          }}
-          onChange={event => searchArticle(event)}
-          placeholder="Enter your search query..."
-        />
-      </Container>
+      <Form
+        query={query}
+        searchInput={styles.searchInput}
+        searchArticle={event => searchArticle(event)}
+      />
+
       <Button
         style={{ marginRight: "1em" }}
         variant="outlined"
@@ -121,6 +126,7 @@ const FrontPage = props => {
       {body}
       {props.loadingNextPage ? (
         <div styles={{ flexGrow: 0.8 }}>
+          <br />
           <br />
           <SyncLoader color={"#589ae8"} />
           <br />
