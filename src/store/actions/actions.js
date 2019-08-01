@@ -19,10 +19,30 @@ export const getArticlesStart = () => {
   };
 };
 
-export const getArticlesSuccess = articles => {
+export const getArticlesSuccess = (articles, numberOfPages, lastURL) => {
   return {
     type: actions.GET_ARTICLES_SUCCESS,
-    articles
+    articles,
+    numberOfPages,
+    lastURL
+  };
+};
+
+export const clearArticles = () => {
+  return {
+    type: actions.CLEAR_ARTICLES
+  };
+};
+
+export const clearArticlesStart = () => {
+  return {
+    type: actions.CLEAR_ARTICLES_START
+  };
+};
+
+export const clearArticlesSuccess = () => {
+  return {
+    type: actions.CLEAR_ARTICLES_SUCCESS
   };
 };
 
@@ -33,8 +53,33 @@ export const getArticlesFail = error => {
   };
 };
 
-export const clearArticles = () => {
+export const getArticlesNextPage = (pages, currentPage, query) => {
   return {
-    type: actions.CLEAR_ARTICLES
+    type: actions.GET_NEXT_PAGE_ARTICLES,
+    currentPage,
+    pages,
+    query
+  };
+};
+
+export const getArticlesNextPageStart = () => {
+  return {
+    type: actions.GET_NEXT_PAGE_ARTICLES_START
+  };
+};
+
+export const getArticlesNextPageSuccess = (articles, currentPage, lastURL) => {
+  return {
+    type: actions.GET_NEXT_PAGE_ARTICLES_SUCCESS,
+    articles,
+    currentPage,
+    lastURL
+  };
+};
+
+export const getArticlesNextPageFail = error => {
+  return {
+    type: actions.GET_NEXT_PAGE_ARTICLES_FAIL,
+    error
   };
 };

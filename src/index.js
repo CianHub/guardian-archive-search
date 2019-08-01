@@ -29,7 +29,7 @@ const store = createStore(
 const app = (
   <Provider store={store}>
     <BrowserRouter>
-      <App />
+      <App style={{ backgroundColor: "#eae8e3" }} />
     </BrowserRouter>
   </Provider>
 );

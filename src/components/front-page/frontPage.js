@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import {
   getArticles,
   getArticlesSearch,
-  clearArticles
+  clearArticles,
+  getArticlesNextPage
 } from "../../store/actions/actions";
 import Button from "@material-ui/core/Button";
 import Input from "@material-ui/core/Input";
@@ -13,19 +14,42 @@ import { Divider } from "@material-ui/core";
 import styles from "./frontPage.module.css";
 import { Article } from "../article/article";
 import Grid from "@material-ui/core/Grid";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import { SyncLoader } from "react-spinners";
 
 const FrontPage = props => {
   const [query, setQuery] = useState("");
+
+  const isBottom = el =>
+    el.getBoundingClientRect().bottom <= window.innerHeight;
+
+  useEffect(() => {
+    document.addEventListener("scroll", trackScrolling);
+    return () => document.removeEventListener("scroll", trackScrolling);
+  });
+
+  const trackScrolling = () => {
+    const wrappedElement = document.getElementById("grid");
+    if (isBottom(wrappedElement)) {
+      console.log("header bottom reached");
+      if (props.articles.length > 0) {
+        props.getNextPage(props.numberOfPages, props.currentPage, query);
+      }
+      document.removeEventListener("scroll", trackScrolling);
+    }
+  };
 
   const searchArticle = event => {
     setQuery(event.target.value);
     if (event.target.value.trim().length === 0) {
       props.clearArticles();
-    }
-    else { 
+    } else {
       props.getSearchArticles(query + "&");
-  }
+    }
+  };
+
+  const clearSearch = () => {
+    props.clearArticles();
+    setQuery("");
   };
 
   const getLatestNews = () => {
@@ -36,12 +60,11 @@ const FrontPage = props => {
   const articles = props.articles
     ? props.articles.map(article => {
         return (
-          <Grid   key={article.id + 1} item xs={3}>
+          <Grid key={article.id + 1} item xs={3}>
             <Article
               className={styles.Article}
               type={article.type}
               webTitle={article.webTitle}
-            
               webUrl={article.webUrl}
               img={article.fields.thumbnail}
               headline={article.fields.headline}
@@ -53,14 +76,18 @@ const FrontPage = props => {
     : null;
 
   const body = props.loading ? (
-    <CircularProgress />
+    <div styles={{ flexGrow: 0.8 }}>
+      <br />
+      <SyncLoader color={"#589ae8"} />
+      <br />
+    </div>
   ) : (
     <Grid container spacing={3}>
       {articles}
     </Grid>
   );
   return (
-    <Container style={{ bakgroundColor: "#eae8e3" }} maxWidth="xl">
+    <Container maxWidth="xl">
       <br />
       <Container className={styles.Header} maxWidth="xl">
         <Header />
@@ -70,7 +97,7 @@ const FrontPage = props => {
         <Input
           fullWidth
           className={styles.searchInput}
-          defaultValue={query}
+          value={query}
           inputProps={{
             "aria-label": "description"
           }}
@@ -78,13 +105,29 @@ const FrontPage = props => {
           placeholder="Enter your search query..."
         />
       </Container>
-      <Button variant="outlined" onClick={getLatestNews}>
+      <Button
+        style={{ marginRight: "1em" }}
+        variant="outlined"
+        onClick={getLatestNews}
+      >
         Get the Latest News
+      </Button>
+      <Button variant="outlined" color="secondary" onClick={clearSearch}>
+        Clear Results
       </Button>
       <br />
       <br />
       <br />
       {body}
+      {props.loadingNextPage ? (
+        <div styles={{ flexGrow: 0.8 }}>
+          <br />
+          <SyncLoader color={"#589ae8"} />
+          <br />
+        </div>
+      ) : null}
+
+      <div id="grid" />
     </Container>
   );
 };
@@ -92,7 +135,10 @@ const FrontPage = props => {
 const mapStateToProps = state => {
   return {
     articles: state.articles,
-    loading: state.loading
+    loading: state.loading,
+    currentPage: state.currentPage,
+    numberOfPages: state.numberOfPages,
+    loadingNextPage: state.loadingNextPage
   };
 };
 
@@ -100,7 +146,9 @@ const mapActionsToProps = dispatch => {
   return {
     getArticles: () => dispatch(getArticles()),
     getSearchArticles: query => dispatch(getArticlesSearch(query)),
-    clearArticles: () => dispatch(clearArticles())
+    clearArticles: () => dispatch(clearArticles()),
+    getNextPage: (numberOfPages, currentPage, query) =>
+      dispatch(getArticlesNextPage(numberOfPages, currentPage, query))
   };
 };
 
