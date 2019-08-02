@@ -7,7 +7,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import { Container, Link } from "@material-ui/core";
+import { Container } from "@material-ui/core";
 import * as img from "../../assets/No_image_3x4.png";
 import stylesS from "./article.module.css";
 
@@ -26,12 +26,10 @@ function openInNewTab(url) {
 }
 
 export const Article = props => {
-  const [clicked, setClicked] = useState(false);
   const classes = useStyles();
   const [styles, setStyles] = useState(classes.card);
 
   const clickHandler = () => {
-    setClicked(true);
     setStyles([classes.card, stylesS.clicked].join(" "));
   };
   return (

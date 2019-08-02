@@ -1,29 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { Container, TextField, Typography } from "@material-ui/core";
-import Input from "@material-ui/core/Input";
-import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import { FormGroup } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
-
-const ranges = [
-  {
-    value: "0-20",
-    label: "0 to 20"
-  },
-  {
-    value: "21-50",
-    label: "21 to 50"
-  },
-  {
-    value: "51-100",
-    label: "51 to 100"
-  }
-];
 
 const useStyles = makeStyles(theme => ({
   root: {
