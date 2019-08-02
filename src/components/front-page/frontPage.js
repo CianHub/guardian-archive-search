@@ -17,6 +17,7 @@ import { Article } from "../article/article";
 import Grid from "@material-ui/core/Grid";
 import { SyncLoader } from "react-spinners";
 import Form from "../form/form";
+import { AnimateOnChange } from "react-animation";
 
 const FrontPage = props => {
   const [query, setQuery] = useState("");
@@ -187,7 +188,15 @@ const FrontPage = props => {
         Get the Latest News
       </Button>
       <br />
-      {body}
+      <br />
+
+      <AnimateOnChange
+        animationIn="custom-animation-in 500ms ease-out forwards"
+        animationOut="custom-animation-out 500ms ease-out forwards"
+        durationOut={500}
+      >
+        {body}
+      </AnimateOnChange>
       {props.loadingNextPage ? (
         <div styles={{ flexGrow: 0.8 }}>
           <br />
