@@ -7,7 +7,6 @@ export const getArticles = () => {
 };
 
 export const getArticlesSearch = searchParams => {
-  console.log(searchParams);
   return {
     type: actions.GET_ARTICLES_SEARCH,
     ...searchParams

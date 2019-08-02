@@ -42,7 +42,6 @@ const FrontPage = props => {
   const trackScrolling = () => {
     const wrappedElement = document.getElementById("grid");
     if (isBottom(wrappedElement)) {
-      console.log("header bottom reached");
       if (props.articles && props.articles.length > 0) {
         props.getNextPage(
           props.numberOfPages,
@@ -62,7 +61,6 @@ const FrontPage = props => {
     const trimQuery = query.trim(),
       trimSection = section.trim(),
       trimOrder = order.trim();
-    console.log(from);
     const searchParams = {
       query: trimQuery.length > 0 ? trimQuery : false,
       section: trimSection.length > 0 ? trimSection : false,
