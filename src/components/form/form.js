@@ -72,6 +72,16 @@ const Form = props => {
               onChange={event => props.topicHandler(event)}
               placeholder="Enter your search query..."
             />
+            {props.error ? (
+              <Typography
+                style={{ color: "red" }}
+                variant="caption"
+                display="block"
+                gutterBottom
+              >
+                Invalid Character Detected
+              </Typography>
+            ) : null}
           </FormControl>
           <FormControl className={clsx(classes.margin, classes.textField)}>
             <TextField

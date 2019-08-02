@@ -8,7 +8,6 @@ import {
   getSections
 } from "../../store/actions/actions";
 import Button from "@material-ui/core/Button";
-import Input from "@material-ui/core/Input";
 import Header from "../header/header";
 import { Container } from "@material-ui/core";
 import { Divider } from "@material-ui/core";
@@ -18,9 +17,11 @@ import Grid from "@material-ui/core/Grid";
 import { SyncLoader } from "react-spinners";
 import Form from "../form/form";
 import { AnimateOnChange } from "react-animation";
+import { checkValidity } from "../utils/validation";
 
 const FrontPage = props => {
   const [query, setQuery] = useState("");
+  const [queryValid, setQueryValid] = useState(true);
   const [section, setSection] = useState("");
   const [order, setOrder] = useState("");
   const [from, setFrom] = useState("");
@@ -73,7 +74,12 @@ const FrontPage = props => {
   };
 
   const topicHandler = event => {
-    setQuery(event.target.value);
+    if (checkValidity(event.target.value, { pattern: true })) {
+      setQueryValid(true);
+      setQuery(event.target.value);
+    } else {
+      setQueryValid(false);
+    }
   };
 
   const sectionHandler = event => {
@@ -163,6 +169,7 @@ const FrontPage = props => {
         order={order}
         from={from}
         to={to}
+        error={!queryValid}
         searchInput={styles.searchInput}
         orderHandler={event => orderHandler(event)}
         toHandler={event => toHandler(event)}
