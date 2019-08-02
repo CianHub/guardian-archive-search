@@ -6,7 +6,8 @@ const initialState = {
   currentPage: 1,
   numberOfPages: null,
   loadingNextPage: false,
-  lastURL: null
+  lastURL: null,
+  sections: null
 };
 
 export const getArticlesReducer = (state = initialState, action) => {
@@ -55,6 +56,10 @@ export const getArticlesReducer = (state = initialState, action) => {
 
     case actions.CLEAR_ARTICLES_START: {
       return { ...state, loading: true };
+    }
+
+    case actions.GET_SECTIONS_SUCCESS: {
+      return { ...state, sections: action.sections };
     }
 
     default:

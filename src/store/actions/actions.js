@@ -6,10 +6,11 @@ export const getArticles = () => {
   };
 };
 
-export const getArticlesSearch = query => {
+export const getArticlesSearch = searchParams => {
+  console.log(searchParams);
   return {
     type: actions.GET_ARTICLES_SEARCH,
-    query
+    ...searchParams
   };
 };
 
@@ -53,12 +54,24 @@ export const getArticlesFail = error => {
   };
 };
 
-export const getArticlesNextPage = (pages, currentPage, query) => {
+export const getArticlesNextPage = (
+  pages,
+  currentPage,
+  query,
+  section,
+  order,
+  toDate,
+  fromDate
+) => {
   return {
     type: actions.GET_NEXT_PAGE_ARTICLES,
     currentPage,
     pages,
-    query
+    query,
+    section,
+    order,
+    toDate,
+    fromDate
   };
 };
 
@@ -82,4 +95,23 @@ export const getArticlesNextPageFail = error => {
     type: actions.GET_NEXT_PAGE_ARTICLES_FAIL,
     error
   };
+};
+
+export const getSections = () => {
+  return { type: actions.GET_SECTIONS };
+};
+
+export const getSectionsStart = () => {
+  return { type: actions.GET_SECTIONS_START };
+};
+
+export const getSectionsSuccess = sections => {
+  return {
+    type: actions.GET_SECTIONS_SUCCESS,
+    sections
+  };
+};
+
+export const getSectionsFail = error => {
+  return { type: actions.GET_SECTIONS_FAIL, error };
 };

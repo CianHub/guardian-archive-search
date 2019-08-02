@@ -4,7 +4,8 @@ import {
   getArticles,
   getArticlesSearch,
   clearArticles,
-  getArticlesNextPage
+  getArticlesNextPage,
+  getSections
 } from "../../store/actions/actions";
 import Button from "@material-ui/core/Button";
 import Input from "@material-ui/core/Input";
@@ -19,6 +20,10 @@ import Form from "../form/form";
 
 const FrontPage = props => {
   const [query, setQuery] = useState("");
+  const [section, setSection] = useState("");
+  const [order, setOrder] = useState("");
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
 
   const isBottom = el =>
     el.getBoundingClientRect().bottom <= window.innerHeight;
@@ -28,34 +33,80 @@ const FrontPage = props => {
     return () => document.removeEventListener("scroll", trackScrolling);
   });
 
+  useEffect(() => {
+    props.getSections();
+  }, []);
+
   const trackScrolling = () => {
     const wrappedElement = document.getElementById("grid");
     if (isBottom(wrappedElement)) {
       console.log("header bottom reached");
       if (props.articles && props.articles.length > 0) {
-        props.getNextPage(props.numberOfPages, props.currentPage, query);
+        props.getNextPage(
+          props.numberOfPages,
+          props.currentPage,
+          query,
+          section,
+          order,
+          to,
+          from
+        );
       }
       document.removeEventListener("scroll", trackScrolling);
     }
   };
 
-  const searchArticle = event => {
+  const searchArticle = () => {
+    const trimQuery = query.trim(),
+      trimSection = section.trim(),
+      trimOrder = order.trim();
+    console.log(from);
+    const searchParams = {
+      query: trimQuery.length > 0 ? trimQuery : false,
+      section: trimSection.length > 0 ? trimSection : false,
+      order: trimOrder.length > 0 ? trimOrder : false,
+      fromDate: from,
+      toDate: to
+    };
+    props.getSearchArticles(searchParams);
+  };
+
+  const topicHandler = event => {
     setQuery(event.target.value);
-    if (event.target.value.trim().length === 0) {
-      props.clearArticles();
-    } else {
-      props.getSearchArticles(query + "&");
-    }
+  };
+
+  const sectionHandler = event => {
+    setSection(event.target.value);
+  };
+
+  const orderHandler = event => {
+    setOrder(event.target.value);
+  };
+
+  const fromHandler = event => {
+    setFrom(event.target.value);
+  };
+
+  const toHandler = event => {
+    setTo(event.target.value);
   };
 
   const clearSearch = () => {
     props.clearArticles();
-    setQuery("");
+    resetFields();
   };
 
   const getLatestNews = () => {
-    setQuery("");
+    resetFields();
     props.getArticles();
+  };
+
+  const resetFields = () => {
+    setQuery("");
+    setSection("");
+    setOrder("");
+    setTo("");
+    setFrom("");
   };
 
   const articles = props.articles
@@ -105,23 +156,36 @@ const FrontPage = props => {
       </Container>
       <Divider variant="middle" />
       <Form
+        sections={props.sections}
         query={query}
+        section={section}
+        order={order}
+        from={from}
+        to={to}
         searchInput={styles.searchInput}
-        searchArticle={event => searchArticle(event)}
+        orderHandler={event => orderHandler(event)}
+        toHandler={event => toHandler(event)}
+        fromHandler={event => fromHandler(event)}
+        topicHandler={event => topicHandler(event)}
+        sectionHandler={event => sectionHandler(event)}
       />
-
+      <br />
       <Button
-        style={{ marginRight: "1em" }}
         variant="outlined"
-        onClick={getLatestNews}
+        color="primary"
+        style={{ marginRight: "1em" }}
+        onClick={searchArticle}
       >
-        Get the Latest News
+        Search
       </Button>
       <Button variant="outlined" color="secondary" onClick={clearSearch}>
         Clear Results
       </Button>
       <br />
       <br />
+      <Button variant="outlined" onClick={getLatestNews}>
+        Get the Latest News
+      </Button>
       <br />
       {body}
       {props.loadingNextPage ? (
@@ -144,7 +208,8 @@ const mapStateToProps = state => {
     loading: state.loading,
     currentPage: state.currentPage,
     numberOfPages: state.numberOfPages,
-    loadingNextPage: state.loadingNextPage
+    loadingNextPage: state.loadingNextPage,
+    sections: state.sections
   };
 };
 
@@ -153,8 +218,27 @@ const mapActionsToProps = dispatch => {
     getArticles: () => dispatch(getArticles()),
     getSearchArticles: query => dispatch(getArticlesSearch(query)),
     clearArticles: () => dispatch(clearArticles()),
-    getNextPage: (numberOfPages, currentPage, query) =>
-      dispatch(getArticlesNextPage(numberOfPages, currentPage, query))
+    getNextPage: (
+      numberOfPages,
+      currentPage,
+      query,
+      section,
+      order,
+      from,
+      to
+    ) =>
+      dispatch(
+        getArticlesNextPage(
+          numberOfPages,
+          currentPage,
+          query,
+          section,
+          order,
+          from,
+          to
+        )
+      ),
+    getSections: () => dispatch(getSections())
   };
 };
 

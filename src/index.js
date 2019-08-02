@@ -5,7 +5,7 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
 import { getArticlesReducer } from "./store/reducers/reducer";
-import { watchArticles } from "./store/sagas/sagas";
+import { watchArticles, watchSections } from "./store/sagas/sagas";
 
 import { BrowserRouter } from "react-router-dom";
 import { createStore, compose, applyMiddleware } from "redux";
@@ -35,6 +35,7 @@ const app = (
 );
 
 sagaMiddleware.run(watchArticles);
+sagaMiddleware.run(watchSections);
 
 ReactDOM.render(app, document.getElementById("root"));
 
