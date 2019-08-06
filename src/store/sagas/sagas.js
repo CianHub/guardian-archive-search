@@ -138,7 +138,7 @@ export function* getSectionsSaga(action) {
   yield put(getSectionsStart());
   try {
     const response = yield axios.get(
-      "http://content.guardianapis.com/sections?&api-key=0b4369b4-cc69-403a-9d7a-b6ade3c54167"
+      "https://content.guardianapis.com/sections?&api-key=0b4369b4-cc69-403a-9d7a-b6ade3c54167"
     );
     yield put(
       getSectionsSuccess(
