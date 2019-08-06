@@ -42,7 +42,11 @@ const FrontPage = props => {
   const trackScrolling = () => {
     const wrappedElement = document.getElementById("grid");
     if (isBottom(wrappedElement)) {
-      if (props.articles && props.articles.length > 0) {
+      if (
+        props.articles &&
+        props.articles.length > 0 &&
+        !props.loadingNextPage
+      ) {
         props.getNextPage(
           props.numberOfPages,
           props.currentPage,
@@ -50,7 +54,8 @@ const FrontPage = props => {
           section,
           order,
           to,
-          from
+          from,
+          props.articles
         );
       }
       document.removeEventListener("scroll", trackScrolling);
@@ -154,51 +159,71 @@ const FrontPage = props => {
     </Grid>
   );
   return (
-    <Container maxWidth="xl">
+    <Container style={{ margin: "0" }} maxWidth="xl">
       <br />
       <Container className={styles.Header} maxWidth="xl">
         <Header />
       </Container>
       <Divider variant="middle" />
-      <Form
-        sections={props.sections}
-        query={query}
-        section={section}
-        order={order}
-        from={from}
-        to={to}
-        error={!queryValid}
-        searchInput={styles.searchInput}
-        orderHandler={event => orderHandler(event)}
-        toHandler={event => toHandler(event)}
-        fromHandler={event => fromHandler(event)}
-        topicHandler={event => topicHandler(event)}
-        sectionHandler={event => sectionHandler(event)}
-      />
-      <br />
-      <Button
-        variant="outlined"
-        color="primary"
-        style={{ marginRight: "1em" }}
-        onClick={searchArticle}
+      <Container
+        maxWidth="lg"
+        style={{
+          border: "1px solid rgba(0, 0, 0, 0.23) ",
+          paddingTop: "2em",
+          paddingBottom: "2em",
+          borderRadius: "4px",
+          marginTop: "2em"
+        }}
       >
-        Search
-      </Button>
-      <Button variant="outlined" color="secondary" onClick={clearSearch}>
-        Clear Results
-      </Button>
-      <br />
-      <br />
-      <Button variant="outlined" onClick={getLatestNews}>
+        <Form
+          sections={props.sections}
+          query={query}
+          section={section}
+          order={order}
+          from={from}
+          to={to}
+          error={!queryValid}
+          searchInput={styles.searchInput}
+          orderHandler={event => orderHandler(event)}
+          toHandler={event => toHandler(event)}
+          fromHandler={event => fromHandler(event)}
+          topicHandler={event => topicHandler(event)}
+          sectionHandler={event => sectionHandler(event)}
+        />
+        <div
+          style={{
+            marginTop: "1.5em"
+          }}
+        >
+          <Button
+            variant="outlined"
+            color="primary"
+            style={{ marginRight: "1em" }}
+            onClick={searchArticle}
+          >
+            Search
+          </Button>
+          <Button variant="outlined" color="secondary" onClick={clearSearch}>
+            Clear Results
+          </Button>
+        </div>
+      </Container>
+
+      <Button
+        style={{
+          marginTop: "2em",
+          marginBottom: "2em"
+        }}
+        variant="outlined"
+        onClick={getLatestNews}
+      >
         Get the Latest News
       </Button>
-      <br />
-      <br />
 
       <AnimateOnChange
         animationIn="custom-animation-in 500ms ease-out forwards"
         animationOut="custom-animation-out 500ms ease-out forwards"
-        durationOut={500}
+        durationOut={200}
       >
         {body}
       </AnimateOnChange>
@@ -210,7 +235,6 @@ const FrontPage = props => {
           <br />
         </div>
       ) : null}
-
       <div id="grid" />
     </Container>
   );
@@ -239,7 +263,8 @@ const mapActionsToProps = dispatch => {
       section,
       order,
       from,
-      to
+      to,
+      articles
     ) =>
       dispatch(
         getArticlesNextPage(
@@ -249,7 +274,8 @@ const mapActionsToProps = dispatch => {
           section,
           order,
           from,
-          to
+          to,
+          articles
         )
       ),
     getSections: () => dispatch(getSections())

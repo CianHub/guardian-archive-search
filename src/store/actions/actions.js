@@ -60,7 +60,8 @@ export const getArticlesNextPage = (
   section,
   order,
   toDate,
-  fromDate
+  fromDate,
+  articles
 ) => {
   return {
     type: actions.GET_NEXT_PAGE_ARTICLES,
@@ -70,7 +71,8 @@ export const getArticlesNextPage = (
     section,
     order,
     toDate,
-    fromDate
+    fromDate,
+    articles
   };
 };
 
@@ -80,12 +82,11 @@ export const getArticlesNextPageStart = () => {
   };
 };
 
-export const getArticlesNextPageSuccess = (articles, currentPage, lastURL) => {
+export const getArticlesNextPageSuccess = (articles, currentPage) => {
   return {
     type: actions.GET_NEXT_PAGE_ARTICLES_SUCCESS,
     articles,
-    currentPage,
-    lastURL
+    currentPage
   };
 };
 

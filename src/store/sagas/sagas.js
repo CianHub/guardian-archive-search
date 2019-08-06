@@ -15,6 +15,7 @@ import {
 
 import { put, takeEvery } from "@redux-saga/core/effects";
 import axios from "axios";
+import { removeDuplicateObjects } from "../../components/utils/removeDuplicateObjects";
 
 export function* getArticlesSaga(action) {
   yield put(getArticlesStart());
@@ -96,9 +97,8 @@ export function* getArticlesNextPageSaga(action) {
       ? action.currentPage + 1
       : action.currentPage;
 
-  const page = action.page ? action.page : 1;
   const pageSize = action.pageSize ? action.pageSize : 50;
-  const query = action.query ? "q=" + action.query + "&" : "";
+  const query = action.query ? "q=" + action.query : "";
   const section = action.section
     ? "&section=" + action.section.toLowerCase()
     : "";
@@ -110,8 +110,6 @@ export function* getArticlesNextPageSaga(action) {
     const articles = yield axios.get(
       "https://content.guardianapis.com/search?" +
         query +
-        "page=" +
-        page +
         "&page-size=" +
         pageSize +
         order +
@@ -123,9 +121,14 @@ export function* getArticlesNextPageSaga(action) {
         "&show-fields=starRating,headline,trailText,thumbnail,sectionName,webPublicationDate,short-url&show-tags=contributor&api-key=" +
         process.env.REACT_APP_API_KEY
     );
-    yield put(
-      getArticlesNextPageSuccess(articles.data.response.results, currentPage)
-    );
+
+    const combinedArticles = yield [
+      ...action.articles,
+      ...articles.data.response.results
+    ];
+    const newArticles = yield removeDuplicateObjects(combinedArticles);
+
+    yield put(getArticlesNextPageSuccess(newArticles, currentPage));
   } catch (err) {
     yield put(getArticlesNextPageFail(err));
   }

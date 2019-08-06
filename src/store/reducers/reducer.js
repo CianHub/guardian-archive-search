@@ -30,10 +30,9 @@ export const getArticlesReducer = (state = initialState, action) => {
     }
 
     case actions.GET_NEXT_PAGE_ARTICLES_SUCCESS:
-      const articles = [...state.articles, ...action.articles];
       return {
         ...state,
-        articles: articles,
+        articles: action.articles,
         currentPage: action.currentPage,
         loadingNextPage: false
       };
@@ -43,6 +42,7 @@ export const getArticlesReducer = (state = initialState, action) => {
     }
 
     case actions.GET_NEXT_PAGE_ARTICLES_FAIL: {
+      console.log(action.error);
       return { ...state, loadingNextPage: false };
     }
     case actions.CLEAR_ARTICLES_SUCCESS:

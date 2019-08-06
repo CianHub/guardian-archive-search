@@ -33,13 +33,14 @@ const Form = props => {
 
   return (
     <React.Fragment>
-      <div>
-        <br />
-        <Typography variant="h4" gutterBottom>
-          Advanced Search
-        </Typography>
-      </div>
+      <br />
+
       <Container maxWidth="lg">
+        <div>
+          <Typography variant="h4" gutterBottom>
+            Advanced Search
+          </Typography>
+        </div>
         <div className={classes.root}>
           <FormControl className={clsx(classes.margin, classes.textField)}>
             <TextField
