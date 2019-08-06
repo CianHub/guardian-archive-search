@@ -1,0 +1,11 @@
+.Logo {
+    width: 20%;
+    height: auto;
+    filter: invert(100%)
+}
+
+@media only screen and (max-width: 600px) {
+    .Logo {
+        width: 50%;
+    }
+}

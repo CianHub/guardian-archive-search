@@ -128,7 +128,7 @@ const FrontPage = props => {
           authorURL = article.tags[0].webUrl;
         }
         return (
-          <Grid key={article.id + 1} item xs={3}>
+          <Grid key={article.id + 1} item xs={12} sm={6} md={3}>
             <Article
               className={styles.Article}
               type={article.type}
